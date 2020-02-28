@@ -15,7 +15,7 @@ defmodule SampleWeb.SampleLive do
 
     <button type="button" phx-click="show_component">Show Component</button>
     <%= if show_component do %>
-      <%= live_component(socket, SampleComponent, id: "sample_component") %>
+      <%= live_component(socket, SampleComponent, id: "sample-component") %>
     <% end %>
     """
   end
