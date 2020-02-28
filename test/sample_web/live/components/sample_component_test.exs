@@ -18,9 +18,7 @@ defmodule SampleWeb.Components.SampleComponentTest do
     test "component click to close" do
       {:ok, view, html} = live_isolated(build_conn(), TestLive, session: %{"pid" => Kernel.self()})
 
-      assert 1 == html
-      |> Floki.find("#sample-component")
-      |> Enum.count()
+      assert html =~ "id=\"sample-component\""
 
       render_click([view, "sample-component"], "hide_component_click")
 
@@ -34,9 +32,7 @@ defmodule SampleWeb.Components.SampleComponentTest do
     test "component esc key to close" do
       {:ok, view, html} = live_isolated(build_conn(), TestLive, session: %{"pid" => Kernel.self()})
 
-      assert 1 == html
-      |> Floki.find("#sample-component")
-      |> Enum.count()
+      assert html =~ "id=\"sample-component\""
 
       render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Escape"})
 
@@ -46,9 +42,7 @@ defmodule SampleWeb.Components.SampleComponentTest do
     test "component enter key does not close" do
       {:ok, view, html} = live_isolated(build_conn(), TestLive, session: %{"pid" => Kernel.self()})
 
-      assert 1 == html
-      |> Floki.find("#sample-component")
-      |> Enum.count()
+      assert html =~ "id=\"sample-component\""
 
       render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Enter"})
 
