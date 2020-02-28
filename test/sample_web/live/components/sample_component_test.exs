@@ -3,39 +3,57 @@ defmodule SampleWeb.Components.SampleComponentTest do
 
   import Phoenix.LiveViewTest
 
+  alias SampleWeb.Components.SampleComponent
   alias SampleWeb.Components.SampleComponentTest.TestLive
 
-  # if one of these tests is commented out, they each pass individually.
-  test "component click to close", %{conn: conn} do
-    {:ok, view, _html} = live_isolated(conn, TestLive)
+  describe "SampleComponent" do
+    test "component has id attribute" do
+      assert render_component(SampleComponent, %{id: "some-id"}) =~ "id=\"some-id\""
+    end
 
-    assert 1 == view
-    |> render()
-    |> Floki.find("#sample-component")
-    |> Enum.count()
+    test "component has phx-click attribute" do
+      assert render_component(SampleComponent, %{id: "test"}) =~ "phx-click=\"hide_component_click\""
+    end
 
-    render_click([view, "sample-component"], "hide_component")
+    test "component click to close", %{conn: conn} do
+      {:ok, view, html} = live_isolated(conn, TestLive, session: %{"pid" => Kernel.self()})
 
-    assert 0 == view
-    |> render()
-    |> Floki.find("#sample-component")
-    |> Enum.count()
-  end
+      assert 1 == html
+      |> Floki.find("#sample-component")
+      |> Enum.count()
 
-  test "component esc key to close", %{conn: conn} do
-    {:ok, view, _html} = live_isolated(conn, TestLive)
+      render_click([view, "sample-component"], "hide_component_click")
 
-    assert 1 == view
-    |> render()
-    |> Floki.find("#sample-component")
-    |> Enum.count()
+      assert_received(:hide_component)
+    end
 
-    render_keyup([view, "sample-component"], "hide_component", :Escape)
+    test "component has phx-window-keyup attribute" do
+      assert render_component(SampleComponent, %{id: "test"}) =~ "phx-window-keyup=\"hide_component_keyup\""
+    end
 
-    assert 0 == view
-    |> render()
-    |> Floki.find("#sample-component")
-    |> Enum.count()
+    test "component esc key to close", %{conn: conn} do
+      {:ok, view, html} = live_isolated(conn, TestLive, session: %{"pid" => Kernel.self()})
+
+      assert 1 == html
+      |> Floki.find("#sample-component")
+      |> Enum.count()
+
+      render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Escape"})
+
+      assert_received(:hide_component)
+    end
+
+    test "component enter key does not close", %{conn: conn} do
+      {:ok, view, html} = live_isolated(conn, TestLive, session: %{"pid" => Kernel.self()})
+
+      assert 1 == html
+      |> Floki.find("#sample-component")
+      |> Enum.count()
+
+      render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Enter"})
+
+      refute_received(:hide_component)
+    end
   end
 end
 
@@ -45,21 +63,21 @@ defmodule SampleWeb.Components.SampleComponentTest.TestLive do
   alias SampleWeb.Components.SampleComponent
 
   @impl true
-  def mount(_assigns, socket) do
-    {:ok, assign(socket, %{show_component: true})}
+  def mount(%{"pid" => test_pid}, socket) do
+    {:ok, assign(socket, %{test_pid: test_pid})}
   end
 
   @impl true
-  def render(%{socket: socket, show_component: show_component} = assigns) do
+  def render(%{socket: socket} = assigns) do
     ~L"""
-    <%= if show_component do %>
-      <%= live_component(socket, SampleComponent, id: "sample-component") %>
-    <% end %>
+    <%= live_component(socket, SampleComponent, id: "sample-component") %>
     """
   end
 
   @impl true
-  def handle_info(:hide_component, socket) do
-    {:noreply, assign(socket, %{show_component: false})}
+  def handle_info(event, %{assigns: %{test_pid: test_pid}} = socket) do
+    send(test_pid, event)
+
+    {:noreply, socket}
   end
 end
