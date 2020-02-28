@@ -1,5 +1,24 @@
 # Sample
 
+## About This Repo
+
+This is a demo repository for unit testing the interactions between a stateful LiveComponent and its parent LiveView.
+
+To run the tests:
+
+```sh
+mix test
+```
+
+To try out the component in the browser:
+
+```sh
+# The component will be available at http://localhost:4000/sample
+mix phx.server
+```
+
+## Notes
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
