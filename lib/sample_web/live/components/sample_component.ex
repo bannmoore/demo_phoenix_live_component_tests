@@ -4,7 +4,7 @@ defmodule SampleWeb.Components.SampleComponent do
   @impl true
   def render(%{id: id} = assigns) do
     ~L"""
-    <div id="<%= id %>">
+    <div id="<%= id %>" phx-hook="SampleHook">
       <button type="button" phx-click="hide_component_click" phx-window-keyup="hide_component_keyup" phx-target="#<%= id %>">Hide Me</button>
     </div>
     """
