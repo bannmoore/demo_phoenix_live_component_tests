@@ -13,42 +13,26 @@ defmodule SampleWeb.SampleLiveTest do
       assert html =~ "<h1>Example Time</h1>"
     end
 
-    test "component is hidden on startup", %{conn: conn} do
+    test "renders trigger_html with correct id", %{conn: conn} do
       {:ok, _view, html} = live(conn, Routes.live_path(conn, SampleLive))
 
-      assert 0 == html
-      |> Floki.find("#sample-component")
-      |> Enum.count()
-    end
-
-    test "has phx-click property", %{conn: conn} do
-      {:ok, _view, html} = live(conn, Routes.live_path(conn, SampleLive))
-
+      assert html =~ "id=\"sample-component\""
       assert html =~ "phx-click=\"show_component\""
+      assert html =~ "phx-target=\"#sample-component\""
     end
 
-    test "click show component button", %{conn: conn} do
-      {:ok, view, _html} = live(conn, Routes.live_path(conn, SampleLive))
+    test "integration with component", %{conn: conn} do
+      {:ok, view, html} = live(conn, Routes.live_path(conn, SampleLive))
 
-      assert 1 == view
-      |> render_click("show_component")
-      |> Floki.find("#sample-component")
-      |> Enum.count()
-    end
+      refute html =~ "id=\"visible\""
 
-    test "receive hide_component message", %{conn: conn} do
-      {:ok, view, _html} = live(conn, Routes.live_path(conn, SampleLive))
+      show_click_html = render_click([view, "sample-component"], "show_component")
 
-      render_click(view, "show_component")
+      assert show_click_html =~ "id=\"visible\""
 
-      # trying to render_click the child causes gen_server errors
-      # render_click([view, "sample-component"], "hide_component_click")
-      send(view.pid, :hide_component)
+      hide_click_html = render_click([view, "sample-component"], "hide_component_click")
 
-      assert 0 == view
-      |> render()
-      |> Floki.find("#sample-component")
-      |> Enum.count()
+      refute hide_click_html =~ "id=\"visible\""
     end
   end
 end

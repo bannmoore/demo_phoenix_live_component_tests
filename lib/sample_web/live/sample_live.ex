@@ -3,31 +3,21 @@ defmodule SampleWeb.SampleLive do
 
   alias SampleWeb.Components.SampleComponent
 
-  @impl true
-  def mount(assigns, socket) do
-    {:ok, assign(socket, %{show_component: false})}
-  end
+  import Phoenix.HTML
 
   @impl true
-  def render(%{socket: socket, show_component: show_component} = assigns) do
+  def render(%{socket: socket} = assigns) do
+    component_id = "sample-component"
+
+    trigger_html = ~E"""
+    <button type="button" phx-click="show_component" phx-target="#<%= component_id %>">Show Component</button>
+    """
+
     ~L"""
     <h1>Example Time</h1>
 
-    <button type="button" phx-click="show_component">Show Component</button>
-    <%= if show_component do %>
-      <%= live_component(socket, SampleComponent, id: "sample-component") %>
-    <% end %>
+    <%= live_component(socket, SampleComponent, id: component_id, trigger_html: trigger_html) %>
     """
-  end
-
-  @impl true
-  def handle_event("show_component", _event_metadata, socket) do
-    {:noreply, assign(socket, %{show_component: true})}
-  end
-
-  @impl true
-  def handle_info(:hide_component, socket) do
-    {:noreply, assign(socket, %{show_component: false})}
   end
 end
 
