@@ -34,19 +34,13 @@ defmodule SampleWeb.Components.SampleComponentTest do
     test "component click to close" do
       {:ok, view, _html} = live_isolated(build_conn(), TestLive, session: %{"component_id" => @component_id})
 
-      render_click([view, "sample-component"], "show_component")
+      show_click_html = render_click([view, "sample-component"], "show_component")
 
-      assert 1 == view
-      |> render()
-      |> Floki.find("#visible")
-      |> Enum.count()
+      assert show_click_html =~ "id=\"visible\""
 
-      render_click([view, "sample-component"], "hide_component_click")
+      hide_click_html = render_click([view, "sample-component"], "hide_component_click")
 
-      assert 0 == view
-      |> render()
-      |> Floki.find("#visible")
-      |> Enum.count()
+      refute hide_click_html =~ "id=\"visible\""
     end
 
     test "component has phx-window-keyup attribute" do
@@ -60,37 +54,25 @@ defmodule SampleWeb.Components.SampleComponentTest do
     test "component esc key to close" do
       {:ok, view, _html} = live_isolated(build_conn(), TestLive, session: %{"component_id" => @component_id})
 
-      render_click([view, "sample-component"], "show_component")
+      show_click_html = render_click([view, "sample-component"], "show_component")
 
-      assert 1 == view
-      |> render()
-      |> Floki.find("#visible")
-      |> Enum.count()
+      assert show_click_html =~ "id=\"visible\""
 
-      render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Escape"})
+      hide_keyup_html =  render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Escape"})
 
-      assert 0 == view
-      |> render()
-      |> Floki.find("#visible")
-      |> Enum.count()
+      refute hide_keyup_html =~ "id=\"visible\""
     end
 
     test "component enter key does not close" do
       {:ok, view, _html} = live_isolated(build_conn(), TestLive, session: %{"component_id" => @component_id})
 
-      render_click([view, "sample-component"], "show_component")
+      show_click_html = render_click([view, "sample-component"], "show_component")
 
-      assert 1 == view
-      |> render()
-      |> Floki.find("#visible")
-      |> Enum.count()
+      assert show_click_html =~ "id=\"visible\""
 
-      render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Enter"})
+      hide_keyup_html = render_keyup([view, "sample-component"], "hide_component_keyup", %{"key" => "Enter"})
 
-      assert 1 == view
-      |> render()
-      |> Floki.find("#visible")
-      |> Enum.count()
+      assert hide_keyup_html =~ "id=\"visible\""
     end
   end
 end
