@@ -15,8 +15,8 @@ defmodule SampleWeb.Components.SampleComponentTest do
       assert render_component(SampleComponent, %{id: "test"}) =~ "phx-click=\"hide_component_click\""
     end
 
-    test "component click to close", %{conn: conn} do
-      {:ok, view, html} = live_isolated(conn, TestLive, session: %{"pid" => Kernel.self()})
+    test "component click to close" do
+      {:ok, view, html} = live_isolated(build_conn(), TestLive, session: %{"pid" => Kernel.self()})
 
       assert 1 == html
       |> Floki.find("#sample-component")
@@ -31,8 +31,8 @@ defmodule SampleWeb.Components.SampleComponentTest do
       assert render_component(SampleComponent, %{id: "test"}) =~ "phx-window-keyup=\"hide_component_keyup\""
     end
 
-    test "component esc key to close", %{conn: conn} do
-      {:ok, view, html} = live_isolated(conn, TestLive, session: %{"pid" => Kernel.self()})
+    test "component esc key to close" do
+      {:ok, view, html} = live_isolated(build_conn(), TestLive, session: %{"pid" => Kernel.self()})
 
       assert 1 == html
       |> Floki.find("#sample-component")
@@ -43,8 +43,8 @@ defmodule SampleWeb.Components.SampleComponentTest do
       assert_received(:hide_component)
     end
 
-    test "component enter key does not close", %{conn: conn} do
-      {:ok, view, html} = live_isolated(conn, TestLive, session: %{"pid" => Kernel.self()})
+    test "component enter key does not close" do
+      {:ok, view, html} = live_isolated(build_conn(), TestLive, session: %{"pid" => Kernel.self()})
 
       assert 1 == html
       |> Floki.find("#sample-component")
