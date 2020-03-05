@@ -62,9 +62,9 @@ defmodule SampleWeb.Components.SampleComponentTest.TestLive do
   end
 
   @impl true
-  def render(%{socket: socket} = assigns) do
+  def render(assigns) do
     ~L"""
-    <%= live_component(socket, SampleComponent, id: "sample-component") %>
+    <%= live_component(@socket, SampleComponent, id: "sample-component") %>
     """
   end
 

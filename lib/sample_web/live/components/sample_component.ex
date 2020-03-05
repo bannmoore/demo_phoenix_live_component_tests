@@ -2,10 +2,10 @@ defmodule SampleWeb.Components.SampleComponent do
   use Phoenix.LiveComponent
 
   @impl true
-  def render(%{id: id} = assigns) do
+  def render(assigns) do
     ~L"""
-    <div id="<%= id %>" phx-hook="SampleHook">
-      <button type="button" phx-click="hide_component_click" phx-window-keyup="hide_component_keyup" phx-target="#<%= id %>">Hide Me</button>
+    <div id="<%= @id %>" phx-hook="SampleHook">
+      <button type="button" phx-click="hide_component_click" phx-window-keyup="hide_component_keyup" phx-target="#<%= @id %>">Hide Me</button>
     </div>
     """
   end

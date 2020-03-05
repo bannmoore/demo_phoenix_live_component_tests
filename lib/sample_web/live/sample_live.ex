@@ -4,18 +4,18 @@ defmodule SampleWeb.SampleLive do
   alias SampleWeb.Components.SampleComponent
 
   @impl true
-  def mount(assigns, socket) do
+  def mount(_assigns, socket) do
     {:ok, assign(socket, %{show_component: false})}
   end
 
   @impl true
-  def render(%{socket: socket, show_component: show_component} = assigns) do
+  def render(assigns) do
     ~L"""
     <h1>Example Time</h1>
 
     <button type="button" phx-click="show_component">Show Component</button>
-    <%= if show_component do %>
-      <%= live_component(socket, SampleComponent, id: "sample-component") %>
+    <%= if @show_component do %>
+      <%= live_component(@socket, SampleComponent, id: "sample-component") %>
     <% end %>
     """
   end
