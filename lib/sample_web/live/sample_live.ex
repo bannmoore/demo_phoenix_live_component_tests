@@ -4,7 +4,7 @@ defmodule SampleWeb.SampleLive do
   alias SampleWeb.Components.SampleComponent
 
   @impl true
-  def mount(_assigns, socket) do
+  def mount(_params, _session, socket) do
     {:ok, assign(socket, %{show_component: false})}
   end
 

@@ -27,11 +27,11 @@ import 'child-replace-with-polyfill'
 import 'url-search-params-polyfill'
 import 'formdata-polyfill'
 import 'classlist-polyfill'
+import '@webcomponents/template'
+import 'shim-keyboard-event-key'
 
 import { Socket } from 'phoenix'
 import LiveSocket from 'phoenix_live_view'
-
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const hooks = {
   SampleHook: {
@@ -44,5 +44,6 @@ const hooks = {
   }
 }
 
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 const liveSocket = new LiveSocket('/live', Socket, { hooks: hooks, params: { _csrf_token: csrfToken } })
 liveSocket.connect()

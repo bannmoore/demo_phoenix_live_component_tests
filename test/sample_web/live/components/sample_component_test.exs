@@ -57,7 +57,7 @@ defmodule SampleWeb.Components.SampleComponentTest.TestLive do
   alias SampleWeb.Components.SampleComponent
 
   @impl true
-  def mount(%{"pid" => test_pid}, socket) do
+  def mount(_params, %{"pid" => test_pid}, socket) do
     {:ok, assign(socket, %{test_pid: test_pid})}
   end
 
